@@ -23,6 +23,7 @@ import {
   User,
   ChevronDown,
 } from 'lucide-react';
+import { DropdownButton } from './ui/dorpdownButton';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -125,7 +126,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="gap-2">
+              <DropdownButton variant="ghost" className="gap-2">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
                     <User className="w-4 h-4 text-primary" />
@@ -135,7 +136,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
                   </span>
                   <ChevronDown className="w-4 h-4 opacity-50" />
                 </div>
-              </Button>
+              </DropdownButton>
             </DropdownMenuTrigger>
 
             <DropdownMenuContent align="end" className="w-56">
