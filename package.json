@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite --host",
-    "build": "vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
+    "build": "vite build && esbuild --platform=node --external:*   --bundle --format=esm --outdir=dist",
     "preview": "vite preview --host",
     "check": "tsc --noEmit",
     "format": "prettier --write ."
@@ -37,6 +37,7 @@
     "@radix-ui/react-toggle": "^1.1.10",
     "@radix-ui/react-toggle-group": "^1.1.11",
     "@radix-ui/react-tooltip": "^1.2.8",
+    "@tailwindcss/postcss": "^4.1.17",
     "@tanstack/react-query": "^4.41.0",
     "axios": "^1.12.0",
     "class-variance-authority": "^0.7.1",
