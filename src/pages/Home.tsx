@@ -1,12 +1,8 @@
-/**
- * Página inicial do dashboard
- */
-
-import { useAuth } from '@/hooks/useAuth';
-import { DashboardLayout } from '@/components/DashboardLayout';
-import { PrivateRoute } from '@/components/PrivateRoute';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { useAuth } from '../hooks/useAuth';
+import { DashboardLayout } from '../components/DashboardLayout';
+import { PrivateRoute } from '../components/PrivateRoute';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
+import { Button } from '../components/ui/button';
 import { FolderPlus, CheckSquare2, BarChart3 } from 'lucide-react';
 import { useLocation } from 'wouter';
 
