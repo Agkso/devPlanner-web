@@ -1,11 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
-import { DashboardLayout } from '@/components/DashboardLayout';
-import { PrivateRoute } from '@/components/PrivateRoute';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { DashboardLayout } from '../components/DashboardLayout';
+import { PrivateRoute } from '../components/PrivateRoute';
+import { Button } from '../components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
+import { Input } from '../components/ui/input';
+import { Label } from '../components/ui/label';
 import {
   Dialog,
   DialogContent,
@@ -13,16 +13,16 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
+} from '../components/ui/dialog';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from '../components/ui/select';
 import { Plus, Trash2, Edit2, Loader2, ArrowLeft } from 'lucide-react';
-import api from '@/services/api';
+import api from '../services/api';
 import { toast } from 'sonner';
 import { useLocation } from 'wouter';
 

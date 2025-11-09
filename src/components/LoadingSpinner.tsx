@@ -1,7 +1,3 @@
-/**
- * Componente de carregamento reutilizável
- */
-
 import React from 'react';
 import { Loader2 } from 'lucide-react';
 

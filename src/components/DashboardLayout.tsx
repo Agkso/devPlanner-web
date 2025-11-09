@@ -1,11 +1,9 @@
-/**
- * Layout principal do dashboard com sidebar e navbar
- */
+
 
 import React, { useState } from 'react';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '../hooks/useAuth';
 import { useLocation } from 'wouter';
-import { Button } from '@/components/ui/button';
+import { Button } from '../components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,7 +11,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '../components/ui/dropdown-menu';
 import {
   Menu,
   X,
@@ -69,13 +67,11 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
 
   return (
     <div className="flex h-screen bg-background">
-      {/* Sidebar */}
       <aside
         className={`${
           sidebarOpen ? 'w-64' : 'w-20'
         } bg-card border-r border-border transition-all duration-300 flex flex-col`}
       >
-        {/* Logo */}
         <div className="h-16 flex items-center justify-between px-4 border-b border-border">
           {sidebarOpen && (
             <h1 className="text-xl font-bold text-primary">Dev Planner</h1>
@@ -92,7 +88,6 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
           </button>
         </div>
 
-        {/* Navegação */}
         <nav className="flex-1 px-2 py-4 space-y-2">
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -109,7 +104,6 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
           })}
         </nav>
 
-        {/* Usuário */}
         <div className="p-4 border-t border-border">
           {sidebarOpen ? (
             <div className="text-xs text-muted-foreground">
@@ -125,13 +119,10 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
         </div>
       </aside>
 
-      {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Navbar */}
         <header className="h-16 bg-card border-b border-border flex items-center justify-between px-6">
           <h2 className="text-lg font-semibold text-foreground">Dev Planner</h2>
 
-          {/* User Menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="gap-2">
@@ -171,7 +162,6 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
           </DropdownMenu>
         </header>
 
-        {/* Page Content */}
         <main className="flex-1 overflow-auto">
           <div className="container py-6">{children}</div>
         </main>

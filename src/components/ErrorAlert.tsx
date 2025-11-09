@@ -1,10 +1,6 @@
-/**
- * Componente de alerta de erro reutilizável
- */
-
 import React from 'react';
 import { AlertCircle, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '../components/ui/button';
 
 interface ErrorAlertProps {
   message: string;

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { DashboardLayout } from '@/components/DashboardLayout';
-import { PrivateRoute } from '@/components/PrivateRoute';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
+import { DashboardLayout } from '../components/DashboardLayout';
+import { PrivateRoute } from '../components/PrivateRoute';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
+import { Input } from '../components/ui/input';
+import { Label } from '../components/ui/label';
+import { Button } from '../components/ui/button';
 import {
   Table,
   TableBody,
@@ -12,21 +12,28 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from '../components/ui/table';
 import { Loader2, ArrowLeft, RefreshCw } from 'lucide-react';
-import api from '@/services/api';
+import api from '../services/api';
 import { toast } from 'sonner';
 import { useLocation } from 'wouter';
 
+interface AuditLogUser {
+  _id: string;
+  name: string;
+  email: string;
+  role: string;
+}
+
 interface AuditLog {
   _id: string;
-  userId: string;
-  userName: string;
+  user: AuditLogUser;
   action: string;
+  details: Record<string, any>;
   resource: string;
   resourceId: string;
-  details: Record<string, any>;
-  timestamp: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export default function AdminLogs() {
@@ -35,7 +42,6 @@ export default function AdminLogs() {
   const [searchTerm, setSearchTerm] = useState('');
   const [, navigate] = useLocation();
 
-  // Carregar logs
   useEffect(() => {
     loadLogs();
   }, []);
@@ -54,7 +60,7 @@ export default function AdminLogs() {
   };
 
   const filteredLogs = logs.filter((log) =>
-    log.userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    log.user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     log.action.toLowerCase().includes(searchTerm.toLowerCase()) ||
     log.resource.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -80,7 +86,6 @@ export default function AdminLogs() {
     <PrivateRoute requiredRole="Admin">
       <DashboardLayout>
         <div className="space-y-6">
-          {/* Cabeçalho */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Button
@@ -128,6 +133,7 @@ export default function AdminLogs() {
               </div>
             </CardContent>
           </Card>
+
           {isLoading ? (
             <div className="flex items-center justify-center py-12">
               <Loader2 className="w-8 h-8 animate-spin text-primary" />
@@ -167,7 +173,7 @@ export default function AdminLogs() {
                       {filteredLogs.map((log) => (
                         <TableRow key={log._id}>
                           <TableCell className="font-medium">
-                            {log.userName}
+                            {log.user.name}
                           </TableCell>
                           <TableCell>
                             <span
@@ -183,7 +189,7 @@ export default function AdminLogs() {
                             {log.resourceId}
                           </TableCell>
                           <TableCell className="text-sm">
-                            {formatDate(log.timestamp)}
+                            {formatDate(log.createdAt)}
                           </TableCell>
                           <TableCell className="text-xs">
                             <details className="cursor-pointer">

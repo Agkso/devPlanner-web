@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 
-import { Button } from "@/components/ui/button";
-import { APP_LOGO, APP_TITLE } from "@/const";
+import { Button } from "../components/ui/button";
+import { APP_LOGO, APP_TITLE } from "../const";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "../components/ui/dialog";
 
 interface ManusDialogProps {
   title?: string;
@@ -58,7 +58,6 @@ export function ManusDialog({
             <img src={logo} alt="App icon" className="w-10 h-10 rounded-md" />
           </div>
 
-          {/* Title and subtitle */}
           <DialogTitle className="text-xl font-semibold text-[#34322d] leading-[26px] tracking-[-0.44px]">
             {title}
           </DialogTitle>
@@ -68,7 +67,6 @@ export function ManusDialog({
         </div>
 
         <DialogFooter className="px-5 py-5">
-          {/* Login button */}
           <Button
             onClick={onLogin}
             className="w-full h-10 bg-[#1a1a19] hover:bg-[#1a1a19]/90 text-white rounded-[10px] text-sm font-medium leading-5 tracking-[-0.154px]"
