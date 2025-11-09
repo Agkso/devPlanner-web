@@ -1,0 +1,178 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+  --primary: #1e40af; /* Azul Profundo */
+  --primary-foreground: #f0f9ff;
+  --sidebar-primary: #1e3a8a;
+  --sidebar-primary-foreground: #f0f9ff;
+  
+  --secondary: #7c3aed; /* Púrpura Vibrante */
+  --secondary-foreground: #f5f3ff;
+  --accent: #10b981; /* Verde - Sucesso */
+  --accent-foreground: #f0fdf4;
+  --destructive: #ef4444; /* Vermelho - Erro */
+  --destructive-foreground: #fef2f2;
+  
+  --background: #ffffff;
+  --foreground: #1f2937;
+  --card: #f9fafb;
+  --card-foreground: #1f2937;
+  --popover: #ffffff;
+  --popover-foreground: #1f2937;
+  
+  --muted: #e5e7eb;
+  --muted-foreground: #6b7280;
+  --border: #e5e7eb;
+  --input: #f3f4f6;
+  --ring: #1e40af;
+  
+  --sidebar: #ffffff;
+  --sidebar-foreground: #1f2937;
+  --sidebar-accent: #eff6ff;
+  --sidebar-accent-foreground: #1e40af;
+  --sidebar-border: #e5e7eb;
+  --sidebar-ring: #1e40af;
+  
+  /* Gráficos e Charts */
+  --chart-1: #1e40af; /* Azul */
+  --chart-2: #7c3aed; /* Púrpura */
+  --chart-3: #10b981; /* Verde */
+  --chart-4: #f59e0b; /* Âmbar */
+  --chart-5: #ef4444; /* Vermelho */
+  
+  --radius: 0.5rem;
+}
+
+.dark {
+  --primary: #3b82f6; /* Azul Claro */
+  --primary-foreground: #0f172a;
+  --sidebar-primary: #2563eb;
+  --sidebar-primary-foreground: #f0f9ff;
+  
+  --secondary: #a78bfa; /* Púrpura Claro */
+  --secondary-foreground: #1e1b4b;
+  --accent: #34d399; /* Verde Claro - Sucesso */
+  --accent-foreground: #0f2f1f;
+  --destructive: #f87171; /* Vermelho Claro - Erro */
+  --destructive-foreground: #2f0f0f;
+  
+  --background: #0f172a;
+  --foreground: #f1f5f9;
+  --card: #1e293b;
+  --card-foreground: #f1f5f9;
+  --popover: #1e293b;
+  --popover-foreground: #f1f5f9;
+  
+  --muted: #334155;
+  --muted-foreground: #cbd5e1;
+  --border: #334155;
+  --input: #1e293b;
+  --ring: #3b82f6;
+  
+  --sidebar: #1e293b;
+  --sidebar-foreground: #f1f5f9;
+  --sidebar-accent: #1e3a8a;
+  --sidebar-accent-foreground: #3b82f6;
+  --sidebar-border: #334155;
+  --sidebar-ring: #3b82f6;
+  
+  --chart-1: #3b82f6; /* Azul */
+  --chart-2: #a78bfa; /* Púrpura */
+  --chart-3: #34d399; /* Verde */
+  --chart-4: #fbbf24; /* Âmbar */
+  --chart-5: #f87171; /* Vermelho */
+  
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  [type="button"]:not(:disabled),
+  [type="submit"]:not(:disabled),
+  [type="reset"]:not(:disabled),
+  a[href],
+  select:not(:disabled),
+  input[type="checkbox"]:not(:disabled),
+  input[type="radio"]:not(:disabled) {
+    @apply cursor-pointer;
+  }
+}
+
+@layer components {
+  .container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem; /* 16px - mobile padding */
+    padding-right: 1rem;
+  }
+
+  .flex {
+    min-height: 0;
+    min-width: 0;
+  }
+
+  @media (min-width: 640px) {
+    .container {
+      padding-left: 1.5rem; /* 24px - tablet padding */
+      padding-right: 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container {
+      padding-left: 2rem; /* 32px - desktop padding */
+      padding-right: 2rem;
+      max-width: 1280px; /* Standard content width */
+    }
+  }
+}
