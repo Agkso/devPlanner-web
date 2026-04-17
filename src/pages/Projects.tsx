@@ -101,8 +101,7 @@ export default function Projects() {
   return (
     <PrivateRoute>
       <DashboardLayout>
-        <div className="space-y-8">
-          {/* Hero */}
+        <div className="ml-10 space-y-8">
           <header className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div>
               <p className="font-mono-soft text-[10px] uppercase tracking-[0.3em] text-primary mb-2">
@@ -179,7 +178,6 @@ export default function Projects() {
             </Dialog>
           </header>
 
-          {/* Counter strip */}
           {!isLoading && projects.length > 0 && (
             <div className="flex items-center gap-3 text-xs font-mono-soft text-muted-foreground">
               <span className="size-1.5 rounded-full bg-primary" />
@@ -189,7 +187,6 @@ export default function Projects() {
             </div>
           )}
 
-          {/* Content */}
           {isLoading ? (
             <div className="flex items-center justify-center py-24">
               <Loader2 className="size-8 animate-spin text-primary" />
