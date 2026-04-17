@@ -70,7 +70,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
     <div className="flex h-screen bg-background">
       <aside
         className={`${
-          sidebarOpen ? 'w-64' : 'w-20'
+          sidebarOpen ? 'w-56' : 'w-20'
         } bg-card border-r border-border transition-all duration-300 flex flex-col`}
       >
         <div className="h-16 flex items-center justify-between px-4 border-b border-border">

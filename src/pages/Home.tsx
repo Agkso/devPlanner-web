@@ -98,8 +98,7 @@ export default function Home() {
   return (
     <PrivateRoute>
       <DashboardLayout>
-        <div className="space-y-10">
-          {/* Hero */}
+        <div className="ml-10 space-y-10">
           <header className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div>
               <p className="font-mono-soft text-[10px] uppercase tracking-[0.3em] text-primary mb-2">
@@ -123,7 +122,6 @@ export default function Home() {
             </div>
           </header>
 
-          {/* Action grid */}
           <div className={`grid grid-cols-1 ${user?.role === "Admin" ? "md:grid-cols-3" : "md:grid-cols-2"} gap-5`}>
             <ActionCard
               title="Novo projeto"
@@ -153,7 +151,6 @@ export default function Home() {
             )}
           </div>
 
-          {/* About + stats */}
           <section className="surface rounded-3xl border border-border p-7 lg:p-9 relative overflow-hidden">
             <div className="absolute inset-0 grain opacity-20 pointer-events-none" />
             <div className="absolute -top-20 -right-20 size-64 rounded-full bg-[hsl(22_82%_52%/0.10)] blur-3xl pointer-events-none" />
