@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import { useAuth } from '@/hooks/useAuth';
 import { useLocation } from 'wouter';
 import { Loader2 } from 'lucide-react';
+import { useAuth } from '../hooks/auth/useAuth';
 
 interface PrivateRouteProps {
   children: React.ReactNode;

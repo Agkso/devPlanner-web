@@ -1,7 +1,7 @@
 
 
 import React, { useState } from 'react';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../hooks/auth/useAuth';
 import { useLocation } from 'wouter';
 import { Button } from '../components/ui/button';
 import {

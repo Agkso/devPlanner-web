@@ -1,4 +1,4 @@
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../hooks/auth/useAuth";
 import { DashboardLayout } from "../components/DashboardLayout";
 import { PrivateRoute } from "../components/PrivateRoute";
 import { Button } from "../components/ui/button";

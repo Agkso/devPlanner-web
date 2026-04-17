@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useAuth } from "../hooks/useAuth";
 import { useLocation } from "wouter";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Loader2, Lock, Mail } from "lucide-react";
+import { useAuth } from "../hooks/auth/useAuth";
 
 export default function Login() {
   const { login, isLoading, isAuthenticated } = useAuth();

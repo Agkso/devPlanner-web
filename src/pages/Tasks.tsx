@@ -32,6 +32,14 @@ import {
 import api from "../services/api";
 import { toast } from "sonner";
 import { useLocation } from "wouter";
+import {
+  DndContext,
+  closestCorners,
+  useSensor,
+  useSensors,
+  PointerSensor,
+} from "@dnd-kit/core"; import { KanbanColumn } from "../components/tasks/KanbanColumn";
+import { useKanbanDnD } from "../hooks/task/useKanban";
 
 type Status = "A Fazer" | "Fazendo" | "Feito";
 
@@ -88,6 +96,17 @@ export default function Tasks() {
     status: "A Fazer",
   });
   const [, navigate] = useLocation();
+  const { handleDragStart, handleDragEnd } = useKanbanDnD({
+    tasks,
+    setTasks,
+  });
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    })
+  );
 
   useEffect(() => {
     loadProjects();
@@ -188,8 +207,7 @@ export default function Tasks() {
   return (
     <PrivateRoute>
       <DashboardLayout>
-        <div className="space-y-8">
-          {/* Hero */}
+        <div className="ml-10 space-y-8">
           <header className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
             <div>
               <button
@@ -313,7 +331,6 @@ export default function Tasks() {
             </div>
           </header>
 
-          {/* Empty state when no projects */}
           {!isLoading && projects.length === 0 && (
             <div className="surface rounded-3xl border border-dashed border-border p-12 text-center">
               <p className="text-muted-foreground mb-4">
@@ -328,112 +345,36 @@ export default function Tasks() {
             </div>
           )}
 
-          {/* Loading */}
           {isLoading && (
             <div className="flex items-center justify-center py-24">
               <Loader2 className="size-8 animate-spin text-primary" />
             </div>
           )}
 
-          {/* Kanban */}
           {!isLoading && selectedProjectId && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              {COLUMNS.map(({ status, subtitle, icon: Icon, tone }) => {
-                const t = toneClasses[tone];
-                const items = getTasksByStatus(status);
-                return (
-                  <div key={status} className="flex flex-col gap-4 min-w-0">
-                    {/* Column header */}
-                    <div className="flex items-end justify-between px-1">
-                      <div className="flex items-center gap-3">
-                        <span className={`size-2 rounded-full ${t.dot}`} />
-                        <div>
-                          <h2 className="font-display text-xl text-[hsl(38_32%_92%)] leading-tight flex items-center gap-2">
-                            <Icon className={`size-4 ${t.iconColor}`} />
-                            {status}
-                          </h2>
-                          <p className="text-[10px] font-mono-soft uppercase tracking-[0.2em] text-muted-foreground mt-0.5">
-                            {subtitle}
-                          </p>
-                        </div>
-                      </div>
-                      <span
-                        className={`size-7 rounded-full grid place-items-center text-[10px] font-mono-soft font-bold border ${t.counter}`}
-                      >
-                        {items.length.toString().padStart(2, "0")}
-                      </span>
-                    </div>
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCorners}
+              onDragStart={handleDragStart}
+              onDragEnd={handleDragEnd}
+            >
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                {COLUMNS.map((column) => {
+                  const items = tasks.filter((t) => t.status === column.status);
 
-                    {/* Cards */}
-                    <div className="space-y-3">
-                      {items.length === 0 ? (
-                        <div className="rounded-2xl border border-dashed border-border p-6 text-center text-xs font-mono-soft text-muted-foreground/60">
-                          nenhuma tarefa
-                        </div>
-                      ) : (
-                        items.map((task, idx) => (
-                          <article
-                            key={task._id}
-                            className={`group surface rounded-2xl border border-border border-l-4 ${t.border} p-4 transition-all hover:-translate-y-0.5 hover:border-[hsl(22_82%_52%/0.30)]`}
-                          >
-                            <div className="flex items-start justify-between mb-3">
-                              <span className="text-[10px] font-mono-soft text-muted-foreground tracking-tight">
-                                TSK-{String(idx + 1).padStart(3, "0")}
-                              </span>
-                              <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
-                                <button
-                                  onClick={() => handleEdit(task)}
-                                  aria-label="Editar"
-                                  className="size-7 rounded-md grid place-items-center hover:bg-muted/60 text-muted-foreground hover:text-foreground transition-colors"
-                                >
-                                  <Edit2 className="size-3" />
-                                </button>
-                                <button
-                                  onClick={() => handleDelete(task._id)}
-                                  aria-label="Deletar"
-                                  className="size-7 rounded-md grid place-items-center hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
-                                >
-                                  <Trash2 className="size-3" />
-                                </button>
-                              </div>
-                            </div>
-
-                            <h4 className="text-sm font-medium text-[hsl(38_32%_92%)] leading-snug text-balance mb-2">
-                              {task.title}
-                            </h4>
-
-                            {task.description && (
-                              <p className="text-xs text-muted-foreground line-clamp-2 mb-3">
-                                {task.description}
-                              </p>
-                            )}
-
-                            <div className="flex items-center justify-between pt-3 border-t border-border">
-                              <span className="text-[10px] font-mono-soft text-muted-foreground/70">
-                                {new Date(task.createdAt).toLocaleDateString("pt-BR")}
-                              </span>
-                              <Select
-                                value={task.status}
-                                onValueChange={(v) => handleStatusChange(task._id, v as Status)}
-                              >
-                                <SelectTrigger className="h-7 w-auto px-2 text-[10px] font-mono-soft border-border bg-background/40">
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent className="bg-card border-border">
-                                  <SelectItem value="A Fazer">A Fazer</SelectItem>
-                                  <SelectItem value="Fazendo">Fazendo</SelectItem>
-                                  <SelectItem value="Feito">Feito</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </div>
-                          </article>
-                        ))
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+                  return (
+                    <KanbanColumn
+                      key={column.status}
+                      column={column}
+                      tasks={items}
+                      onEditTask={handleEdit}
+                      onDeleteTask={handleDelete}
+                      onStatusChange={handleStatusChange}
+                    />
+                  );
+                })}
+              </div>
+            </DndContext>
           )}
         </div>
       </DashboardLayout>

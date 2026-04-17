@@ -198,7 +198,8 @@ export default function Projects() {
                 <div className="size-16 mx-auto rounded-2xl bg-[hsl(22_82%_52%/0.10)] grid place-items-center mb-4">
                   <FolderOpen className="size-7 text-primary" />
                 </div>
-                <h3 className="font-display text-2xl text-[hsl(38_32%_92%)] mb-2">
+                <h3 className="font-display text-2xl text-[
+                hsl(38_32%_92%)] mb-2">
                   Nenhum projeto ainda
                 </h3>
                 <p className="text-muted-foreground max-w-sm mx-auto mb-6">
