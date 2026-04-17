@@ -3,9 +3,9 @@ import { DashboardLayout } from "../components/DashboardLayout";
 import { PrivateRoute } from "../components/PrivateRoute";
 import api from "../services/api";
 import { toast } from "sonner";
-import LogsHeader from "../components/logs/LogsHeader";
 import LogsFilter from "../components/logs/LogsFilter";
 import LogsTable from "../components/logs/LogsTable";
+import LogsHeader from "../components/logs/LogsHeader";
 
 export interface AuditLogUser {
   _id: string;
