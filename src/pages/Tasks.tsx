@@ -1,11 +1,9 @@
-
-import React, { useState, useEffect } from 'react';
-import { DashboardLayout } from '../components/DashboardLayout';
-import { PrivateRoute } from '../components/PrivateRoute';
-import { Button } from '../components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
-import { Input } from '../components/ui/input';
-import { Label } from '../components/ui/label';
+import React, { useEffect, useState } from "react";
+import { DashboardLayout } from "../components/DashboardLayout";
+import { PrivateRoute } from "../components/PrivateRoute";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
 import {
   Dialog,
   DialogContent,
@@ -13,48 +11,81 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '../components/ui/dialog';
+} from "../components/ui/dialog";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../components/ui/select';
-import { Plus, Trash2, Edit2, Loader2, ArrowLeft } from 'lucide-react';
-import api from '../services/api';
-import { toast } from 'sonner';
-import { useLocation } from 'wouter';
+} from "../components/ui/select";
+import {
+  ArrowLeft,
+  CheckCircle2,
+  CircleDashed,
+  Edit2,
+  Loader2,
+  Plus,
+  Timer,
+  Trash2,
+} from "lucide-react";
+import api from "../services/api";
+import { toast } from "sonner";
+import { useLocation } from "wouter";
+
+type Status = "A Fazer" | "Fazendo" | "Feito";
 
 interface Task {
   _id: string;
   title: string;
   description: string;
-  status: 'A Fazer' | 'Fazendo' | 'Feito';
+  status: Status;
   projectId: string;
   createdAt: string;
 }
-
 interface Project {
   _id: string;
   title: string;
 }
 
+const COLUMNS: { status: Status; subtitle: string; icon: React.ComponentType<{ className?: string }>; tone: "muted" | "copper" | "moss" }[] = [
+  { status: "A Fazer", subtitle: "aguardando", icon: CircleDashed, tone: "muted" },
+  { status: "Fazendo", subtitle: "em progresso", icon: Timer, tone: "copper" },
+  { status: "Feito", subtitle: "concluídas", icon: CheckCircle2, tone: "moss" },
+];
+
+const toneClasses: Record<"muted" | "copper" | "moss", { dot: string; counter: string; border: string; iconColor: string }> = {
+  muted: {
+    dot: "bg-muted-foreground/40",
+    counter: "bg-muted text-muted-foreground border-border",
+    border: "border-l-border",
+    iconColor: "text-muted-foreground",
+  },
+  copper: {
+    dot: "bg-primary shadow-[0_0_10px_hsl(22_82%_52%)]",
+    counter: "bg-gradient-to-r from-[hsl(22_82%_52%)] to-[hsl(24_70%_60%)] text-[hsl(38_45%_96%)] border-transparent",
+    border: "border-l-primary",
+    iconColor: "text-primary",
+  },
+  moss: {
+    dot: "bg-[hsl(150_32%_42%)]",
+    counter: "bg-[hsl(150_32%_42%/0.20)] text-[hsl(150_32%_42%)] border-[hsl(150_32%_42%/0.30)]",
+    border: "border-l-[hsl(150_32%_42%)]",
+    iconColor: "text-[hsl(150_32%_42%)]",
+  },
+};
+
 export default function Tasks() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
-  const [selectedProjectId, setSelectedProjectId] = useState<string>('');
+  const [selectedProjectId, setSelectedProjectId] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [formData, setFormData] = useState<{
-    title: string;
-    description: string;
-    status: 'A Fazer' | 'Fazendo' | 'Feito';
-  }>({
-    title: '',
-    description: '',
-    status: 'A Fazer',
+  const [formData, setFormData] = useState<{ title: string; description: string; status: Status }>({
+    title: "",
+    description: "",
+    status: "A Fazer",
   });
   const [, navigate] = useLocation();
 
@@ -63,20 +94,16 @@ export default function Tasks() {
   }, []);
 
   useEffect(() => {
-    if (selectedProjectId) {
-      loadTasks();
-    }
+    if (selectedProjectId) loadTasks();
   }, [selectedProjectId]);
 
   const loadProjects = async () => {
     try {
-      const response = await api.get('/projects');
+      const response = await api.get("/projects");
       setProjects(response.data);
-      if (response.data.length > 0) {
-        setSelectedProjectId(response.data[0]._id);
-      }
+      if (response.data.length > 0) setSelectedProjectId(response.data[0]._id);
     } catch (error) {
-      toast.error('Erro ao carregar projetos');
+      toast.error("Erro ao carregar projetos");
       console.error(error);
     } finally {
       setIsLoading(false);
@@ -89,7 +116,7 @@ export default function Tasks() {
       const response = await api.get(`/tasks/${selectedProjectId}`);
       setTasks(response.data);
     } catch (error) {
-      toast.error('Erro ao carregar tarefas');
+      toast.error("Erro ao carregar tarefas");
       console.error(error);
     } finally {
       setIsLoading(false);
@@ -98,66 +125,53 @@ export default function Tasks() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!formData.title.trim()) {
-      toast.error('Por favor, preencha o título da tarefa');
+      toast.error("Por favor, preencha o título da tarefa");
       return;
     }
-
     try {
       if (editingId) {
         await api.put(`/tasks/${editingId}`, formData);
-        toast.success('Tarefa atualizada com sucesso!');
+        toast.success("Tarefa atualizada com sucesso!");
       } else {
-        await api.post('/tasks', {
-          ...formData,
-          projectId: selectedProjectId,
-        });
-        toast.success('Tarefa criada com sucesso!');
+        await api.post("/tasks", { ...formData, projectId: selectedProjectId });
+        toast.success("Tarefa criada com sucesso!");
       }
-
-      setFormData({ title: '', description: '', status: 'A Fazer' });
+      setFormData({ title: "", description: "", status: "A Fazer" });
       setEditingId(null);
       setIsDialogOpen(false);
       loadTasks();
     } catch (error) {
-      toast.error('Erro ao salvar tarefa');
+      toast.error("Erro ao salvar tarefa");
       console.error(error);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm('Tem certeza que deseja deletar esta tarefa?')) {
-      return;
-    }
-
+    if (!window.confirm("Tem certeza que deseja deletar esta tarefa?")) return;
     try {
       await api.delete(`/tasks/${id}`);
-      toast.success('Tarefa deletada com sucesso!');
+      toast.success("Tarefa deletada com sucesso!");
       loadTasks();
     } catch (error) {
-      toast.error('Erro ao deletar tarefa');
+      toast.error("Erro ao deletar tarefa");
       console.error(error);
     }
   };
 
   const handleEdit = (task: Task) => {
     setEditingId(task._id);
-    setFormData({
-      title: task.title,
-      description: task.description,
-      status: task.status,
-    });
+    setFormData({ title: task.title, description: task.description, status: task.status });
     setIsDialogOpen(true);
   };
 
-  const handleStatusChange = async (taskId: string, newStatus: string) => {
+  const handleStatusChange = async (taskId: string, newStatus: Status) => {
     try {
       await api.put(`/tasks/${taskId}`, { status: newStatus });
-      toast.success('Status atualizado com sucesso!');
+      toast.success("Status atualizado com sucesso!");
       loadTasks();
     } catch (error) {
-      toast.error('Erro ao atualizar status');
+      toast.error("Erro ao atualizar status");
       console.error(error);
     }
   };
@@ -165,218 +179,260 @@ export default function Tasks() {
   const handleCloseDialog = () => {
     setIsDialogOpen(false);
     setEditingId(null);
-    setFormData({ title: '', description: '', status: 'A Fazer' });
+    setFormData({ title: "", description: "", status: "A Fazer" });
   };
 
-  const columns = ['A Fazer', 'Fazendo', 'Feito'] as const;
-  const getTasksByStatus = (status: string) =>
-    tasks.filter((task) => task.status === status);
+  const getTasksByStatus = (status: Status) => tasks.filter((t) => t.status === status);
+  const currentProject = projects.find((p) => p._id === selectedProjectId);
 
   return (
     <PrivateRoute>
       <DashboardLayout>
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate('/projects')}
-                className="gap-2"
+        <div className="space-y-8">
+          {/* Hero */}
+          <header className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+            <div>
+              <button
+                onClick={() => navigate("/projects")}
+                className="inline-flex items-center gap-2 text-xs font-mono-soft uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors mb-3"
               >
-                <ArrowLeft className="w-4 h-4" />
-                Voltar
-              </Button>
-              <div>
-                <h1 className="text-3xl font-bold text-foreground">Kanban</h1>
-                <p className="text-muted-foreground mt-2">
-                  Gerencie suas tarefas com o quadro Kanban
-                </p>
-              </div>
+                <ArrowLeft className="size-3.5" />
+                voltar para projetos
+              </button>
+              <h1 className="font-display text-4xl text-[hsl(38_32%_92%)] text-balance">
+                Quadro <span className="italic text-primary">Kanban</span>
+              </h1>
+              <p className="text-muted-foreground mt-2">
+                {currentProject
+                  ? <>Trabalhando em <span className="text-foreground font-medium">{currentProject.title}</span></>
+                  : "Selecione um projeto para começar"}
+              </p>
             </div>
 
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="gap-2">
-                  <Plus className="w-4 h-4" />
-                  Nova Tarefa
-                </Button>
-              </DialogTrigger>
+            <div className="flex flex-wrap items-center gap-3">
+              {projects.length > 0 && (
+                <Select value={selectedProjectId} onValueChange={setSelectedProjectId}>
+                  <SelectTrigger className="h-11 min-w-[16rem] bg-card border-border">
+                    <SelectValue placeholder="Selecionar projeto" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-card border-border">
+                    {projects.map((p) => (
+                      <SelectItem key={p._id} value={p._id}>
+                        {p.title}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
 
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>
-                    {editingId ? 'Editar Tarefa' : 'Criar Nova Tarefa'}
-                  </DialogTitle>
-                  <DialogDescription>
-                    {editingId
-                      ? 'Atualize os detalhes da sua tarefa'
-                      : 'Crie uma nova tarefa para seu projeto'}
-                  </DialogDescription>
-                </DialogHeader>
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button
+                    disabled={!selectedProjectId}
+                    className="h-11 px-5 bg-gradient-to-r from-[hsl(22_82%_52%)] to-[hsl(24_70%_60%)] text-[hsl(38_45%_96%)] ring-copper gap-2"
+                  >
+                    <Plus className="size-4" />
+                    Nova tarefa
+                  </Button>
+                </DialogTrigger>
 
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="title">Título</Label>
-                    <Input
-                      id="title"
-                      placeholder="Nome da tarefa"
-                      value={formData.title}
-                      onChange={(e) =>
-                        setFormData({ ...formData, title: e.target.value })
-                      }
-                    />
-                  </div>
+                <DialogContent className="bg-card border-border">
+                  <DialogHeader>
+                    <DialogTitle className="font-display text-2xl text-[hsl(38_32%_92%)]">
+                      {editingId ? "Editar tarefa" : "Criar nova tarefa"}
+                    </DialogTitle>
+                    <DialogDescription className="text-muted-foreground">
+                      {editingId
+                        ? "Atualize os detalhes da sua tarefa"
+                        : "Crie uma nova tarefa para seu projeto"}
+                    </DialogDescription>
+                  </DialogHeader>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="description">Descrição</Label>
-                    <Input
-                      id="description"
-                      placeholder="Descrição da tarefa"
-                      value={formData.description}
-                      onChange={(e) =>
-                        setFormData({ ...formData, description: e.target.value })
-                      }
-                    />
-                  </div>
+                  <form onSubmit={handleSubmit} className="space-y-4 pt-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="title" className="text-xs font-mono-soft uppercase tracking-widest text-muted-foreground">
+                        Título
+                      </Label>
+                      <Input
+                        id="title"
+                        placeholder="Nome da tarefa"
+                        value={formData.title}
+                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                        className="h-11 bg-background/60"
+                      />
+                    </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="status">Status</Label>
-                    <Select
-                      value={formData.status}
-                      onValueChange={(value: 'A Fazer' | 'Fazendo' | 'Feito') =>
-                        setFormData({ ...formData, status: value })
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="A Fazer">A Fazer</SelectItem>
-                        <SelectItem value="Fazendo">Fazendo</SelectItem>
-                        <SelectItem value="Feito">Feito</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="description" className="text-xs font-mono-soft uppercase tracking-widest text-muted-foreground">
+                        Descrição
+                      </Label>
+                      <Input
+                        id="description"
+                        placeholder="Descrição da tarefa"
+                        value={formData.description}
+                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                        className="h-11 bg-background/60"
+                      />
+                    </div>
 
-                  <div className="flex gap-2 justify-end">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={handleCloseDialog}
-                    >
-                      Cancelar
-                    </Button>
-                    <Button type="submit">
-                      {editingId ? 'Atualizar' : 'Criar'}
-                    </Button>
-                  </div>
-                </form>
-              </DialogContent>
-            </Dialog>
-          </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="status" className="text-xs font-mono-soft uppercase tracking-widest text-muted-foreground">
+                        Status
+                      </Label>
+                      <Select
+                        value={formData.status}
+                        onValueChange={(value) =>
+                          setFormData({ ...formData, status: value as Status })
+                        }
+                      >
+                        <SelectTrigger className="h-11 bg-background/60">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="bg-card border-border">
+                          <SelectItem value="A Fazer">A Fazer</SelectItem>
+                          <SelectItem value="Fazendo">Fazendo</SelectItem>
+                          <SelectItem value="Feito">Feito</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
 
-          {projects.length > 0 && (
-            <div className="flex items-center gap-4">
-              <Label htmlFor="project">Projeto:</Label>
-              <Select value={selectedProjectId} onValueChange={setSelectedProjectId}>
-                <SelectTrigger className="w-64">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {projects.map((project) => (
-                    <SelectItem key={project._id} value={project._id}>
-                      {project.title}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                    <div className="flex gap-2 justify-end pt-2">
+                      <Button type="button" variant="outline" onClick={handleCloseDialog}>
+                        Cancelar
+                      </Button>
+                      <Button
+                        type="submit"
+                        className="bg-gradient-to-r from-[hsl(22_82%_52%)] to-[hsl(24_70%_60%)] text-[hsl(38_45%_96%)]"
+                      >
+                        {editingId ? "Atualizar" : "Criar"}
+                      </Button>
+                    </div>
+                  </form>
+                </DialogContent>
+              </Dialog>
+            </div>
+          </header>
+
+          {/* Empty state when no projects */}
+          {!isLoading && projects.length === 0 && (
+            <div className="surface rounded-3xl border border-dashed border-border p-12 text-center">
+              <p className="text-muted-foreground mb-4">
+                Você ainda não tem projetos. Crie um para começar a adicionar tarefas.
+              </p>
+              <Button
+                onClick={() => navigate("/projects")}
+                className="bg-gradient-to-r from-[hsl(22_82%_52%)] to-[hsl(24_70%_60%)] text-[hsl(38_45%_96%)]"
+              >
+                Ir para projetos
+              </Button>
             </div>
           )}
 
-          {isLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="w-8 h-8 animate-spin text-primary" />
+          {/* Loading */}
+          {isLoading && (
+            <div className="flex items-center justify-center py-24">
+              <Loader2 className="size-8 animate-spin text-primary" />
             </div>
-          ) : projects.length === 0 ? (
-            <Card>
-              <CardContent className="flex flex-col items-center justify-center py-12">
-                <p className="text-muted-foreground text-center mb-4">
-                  Nenhum projeto criado. Crie um projeto primeiro!
-                </p>
-                <Button onClick={() => navigate('/projects')}>
-                  Ir para Projetos
-                </Button>
-              </CardContent>
-            </Card>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {columns.map((status) => (
-                <div key={status} className="space-y-4">
-                  <div className="bg-muted p-4 rounded-lg">
-                    <h2 className="font-semibold text-foreground">{status}</h2>
-                    <p className="text-sm text-muted-foreground">
-                      {getTasksByStatus(status).length} tarefa(s)
-                    </p>
-                  </div>
+          )}
 
-                  <div className="space-y-3">
-                    {getTasksByStatus(status).map((task) => (
-                      <Card
-                        key={task._id}
-                        className="hover:shadow-md transition-shadow"
+          {/* Kanban */}
+          {!isLoading && selectedProjectId && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              {COLUMNS.map(({ status, subtitle, icon: Icon, tone }) => {
+                const t = toneClasses[tone];
+                const items = getTasksByStatus(status);
+                return (
+                  <div key={status} className="flex flex-col gap-4 min-w-0">
+                    {/* Column header */}
+                    <div className="flex items-end justify-between px-1">
+                      <div className="flex items-center gap-3">
+                        <span className={`size-2 rounded-full ${t.dot}`} />
+                        <div>
+                          <h2 className="font-display text-xl text-[hsl(38_32%_92%)] leading-tight flex items-center gap-2">
+                            <Icon className={`size-4 ${t.iconColor}`} />
+                            {status}
+                          </h2>
+                          <p className="text-[10px] font-mono-soft uppercase tracking-[0.2em] text-muted-foreground mt-0.5">
+                            {subtitle}
+                          </p>
+                        </div>
+                      </div>
+                      <span
+                        className={`size-7 rounded-full grid place-items-center text-[10px] font-mono-soft font-bold border ${t.counter}`}
                       >
-                        <CardHeader className="pb-3">
-                          <CardTitle className="text-base">
-                            {task.title}
-                          </CardTitle>
-                          <CardDescription className="text-xs">
-                            {task.description}
-                          </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-3">
-                          <Select
-                            value={task.status}
-                            onValueChange={(newStatus) =>
-                              handleStatusChange(task._id, newStatus)
-                            }
-                          >
-                            <SelectTrigger className="h-8 text-xs">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="A Fazer">A Fazer</SelectItem>
-                              <SelectItem value="Fazendo">Fazendo</SelectItem>
-                              <SelectItem value="Feito">Feito</SelectItem>
-                            </SelectContent>
-                          </Select>
+                        {items.length.toString().padStart(2, "0")}
+                      </span>
+                    </div>
 
-                          <div className="flex gap-2">
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleEdit(task)}
-                              className="flex-1 h-8 text-xs gap-1"
-                            >
-                              <Edit2 className="w-3 h-3" />
-                              Editar
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="destructive"
-                              onClick={() => handleDelete(task._id)}
-                              className="flex-1 h-8 text-xs gap-1"
-                            >
-                              <Trash2 className="w-3 h-3" />
-                              Deletar
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
+                    {/* Cards */}
+                    <div className="space-y-3">
+                      {items.length === 0 ? (
+                        <div className="rounded-2xl border border-dashed border-border p-6 text-center text-xs font-mono-soft text-muted-foreground/60">
+                          nenhuma tarefa
+                        </div>
+                      ) : (
+                        items.map((task, idx) => (
+                          <article
+                            key={task._id}
+                            className={`group surface rounded-2xl border border-border border-l-4 ${t.border} p-4 transition-all hover:-translate-y-0.5 hover:border-[hsl(22_82%_52%/0.30)]`}
+                          >
+                            <div className="flex items-start justify-between mb-3">
+                              <span className="text-[10px] font-mono-soft text-muted-foreground tracking-tight">
+                                TSK-{String(idx + 1).padStart(3, "0")}
+                              </span>
+                              <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                                <button
+                                  onClick={() => handleEdit(task)}
+                                  aria-label="Editar"
+                                  className="size-7 rounded-md grid place-items-center hover:bg-muted/60 text-muted-foreground hover:text-foreground transition-colors"
+                                >
+                                  <Edit2 className="size-3" />
+                                </button>
+                                <button
+                                  onClick={() => handleDelete(task._id)}
+                                  aria-label="Deletar"
+                                  className="size-7 rounded-md grid place-items-center hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
+                                >
+                                  <Trash2 className="size-3" />
+                                </button>
+                              </div>
+                            </div>
+
+                            <h4 className="text-sm font-medium text-[hsl(38_32%_92%)] leading-snug text-balance mb-2">
+                              {task.title}
+                            </h4>
+
+                            {task.description && (
+                              <p className="text-xs text-muted-foreground line-clamp-2 mb-3">
+                                {task.description}
+                              </p>
+                            )}
+
+                            <div className="flex items-center justify-between pt-3 border-t border-border">
+                              <span className="text-[10px] font-mono-soft text-muted-foreground/70">
+                                {new Date(task.createdAt).toLocaleDateString("pt-BR")}
+                              </span>
+                              <Select
+                                value={task.status}
+                                onValueChange={(v) => handleStatusChange(task._id, v as Status)}
+                              >
+                                <SelectTrigger className="h-7 w-auto px-2 text-[10px] font-mono-soft border-border bg-background/40">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent className="bg-card border-border">
+                                  <SelectItem value="A Fazer">A Fazer</SelectItem>
+                                  <SelectItem value="Fazendo">Fazendo</SelectItem>
+                                  <SelectItem value="Feito">Feito</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </article>
+                        ))
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>

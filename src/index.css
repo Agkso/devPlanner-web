@@ -1,178 +1,136 @@
 @import "tailwindcss";
-@import "tw-animate-css";
+@plugin "tailwindcss-animate";
 
-@custom-variant dark (&:is(.dark *));
+/* devPlanner — Copper & Vellum (Dark Editorial)
+ * Tailwind v4 syntax. Cole este arquivo em src/index.css.
+ * Todas as cores em HSL.
+ */
 
-@theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
-}
+@theme {
+  --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
-:root {
-  --primary: #1e40af; /* Azul Profundo */
-  --primary-foreground: #f0f9ff;
-  --sidebar-primary: #1e3a8a;
-  --sidebar-primary-foreground: #f0f9ff;
-  
-  --secondary: #7c3aed; /* Púrpura Vibrante */
-  --secondary-foreground: #f5f3ff;
-  --accent: #10b981; /* Verde - Sucesso */
-  --accent-foreground: #f0fdf4;
-  --destructive: #ef4444; /* Vermelho - Erro */
-  --destructive-foreground: #fef2f2;
-  
-  --background: #ffffff;
-  --foreground: #1f2937;
-  --card: #f9fafb;
-  --card-foreground: #1f2937;
-  --popover: #ffffff;
-  --popover-foreground: #1f2937;
-  
-  --muted: #e5e7eb;
-  --muted-foreground: #6b7280;
-  --border: #e5e7eb;
-  --input: #f3f4f6;
-  --ring: #1e40af;
-  
-  --sidebar: #ffffff;
-  --sidebar-foreground: #1f2937;
-  --sidebar-accent: #eff6ff;
-  --sidebar-accent-foreground: #1e40af;
-  --sidebar-border: #e5e7eb;
-  --sidebar-ring: #1e40af;
-  
-  /* Gráficos e Charts */
-  --chart-1: #1e40af; /* Azul */
-  --chart-2: #7c3aed; /* Púrpura */
-  --chart-3: #10b981; /* Verde */
-  --chart-4: #f59e0b; /* Âmbar */
-  --chart-5: #ef4444; /* Vermelho */
-  
-  --radius: 0.5rem;
-}
+  --color-background: hsl(160 18% 8%);
+  --color-foreground: hsl(38 35% 88%);
 
-.dark {
-  --primary: #3b82f6; /* Azul Claro */
-  --primary-foreground: #0f172a;
-  --sidebar-primary: #2563eb;
-  --sidebar-primary-foreground: #f0f9ff;
-  
-  --secondary: #a78bfa; /* Púrpura Claro */
-  --secondary-foreground: #1e1b4b;
-  --accent: #34d399; /* Verde Claro - Sucesso */
-  --accent-foreground: #0f2f1f;
-  --destructive: #f87171; /* Vermelho Claro - Erro */
-  --destructive-foreground: #2f0f0f;
-  
-  --background: #0f172a;
-  --foreground: #f1f5f9;
-  --card: #1e293b;
-  --card-foreground: #f1f5f9;
-  --popover: #1e293b;
-  --popover-foreground: #f1f5f9;
-  
-  --muted: #334155;
-  --muted-foreground: #cbd5e1;
-  --border: #334155;
-  --input: #1e293b;
-  --ring: #3b82f6;
-  
-  --sidebar: #1e293b;
-  --sidebar-foreground: #f1f5f9;
-  --sidebar-accent: #1e3a8a;
-  --sidebar-accent-foreground: #3b82f6;
-  --sidebar-border: #334155;
-  --sidebar-ring: #3b82f6;
-  
-  --chart-1: #3b82f6; /* Azul */
-  --chart-2: #a78bfa; /* Púrpura */
-  --chart-3: #34d399; /* Verde */
-  --chart-4: #fbbf24; /* Âmbar */
-  --chart-5: #f87171; /* Vermelho */
-  
-  --radius: 0.5rem;
+  --color-card: hsl(160 16% 11%);
+  --color-card-foreground: hsl(38 35% 90%);
+
+  --color-popover: hsl(160 18% 9%);
+  --color-popover-foreground: hsl(38 35% 90%);
+
+  --color-primary: hsl(22 82% 52%);
+  --color-primary-foreground: hsl(38 45% 96%);
+
+  --color-secondary: hsl(150 22% 28%);
+  --color-secondary-foreground: hsl(38 35% 92%);
+
+  --color-muted: hsl(160 12% 16%);
+  --color-muted-foreground: hsl(38 14% 62%);
+
+  --color-accent: hsl(38 55% 70%);
+  --color-accent-foreground: hsl(160 25% 12%);
+
+  --color-destructive: hsl(8 75% 55%);
+  --color-destructive-foreground: hsl(38 45% 96%);
+
+  --color-border: hsl(160 14% 18%);
+  --color-input: hsl(160 14% 18%);
+  --color-ring: hsl(22 82% 52%);
+
+  --radius: 1rem;
+
+  /* Tokens semânticos do produto */
+  --color-vellum: hsl(38 28% 84%);
+  --color-vellum-soft: hsl(38 22% 78%);
+  --color-paper: hsl(38 32% 92%);
+  --color-copper: hsl(22 82% 52%);
+  --color-copper-soft: hsl(24 70% 60%);
+  --color-copper-deep: hsl(18 78% 38%);
+  --color-moss: hsl(150 32% 42%);
+  --color-moss-deep: hsl(155 35% 22%);
+  --color-ink: hsl(160 25% 6%);
+  --color-iron: hsl(200 12% 18%);
+  --color-bronze: hsl(32 55% 55%);
+
+  --animate-fade-in: fade-in 0.5s ease-out;
+  --animate-scale-in: scale-in 0.3s ease-out;
+  --animate-pulse-glow: pulse-glow 2.4s ease-in-out infinite;
+
+  @keyframes fade-in {
+    0% { opacity: 0; transform: translateY(8px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scale-in {
+    0% { opacity: 0; transform: scale(0.96); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 0 0 hsl(22 82% 52% / 0.5); }
+    50% { box-shadow: 0 0 0 8px hsl(22 82% 52% / 0); }
+  }
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    border-color: var(--color-border);
   }
+
+  html, body, #root {
+    min-height: 100vh;
+  }
+
   body {
-    @apply bg-background text-foreground;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    background-image:
+      radial-gradient(60% 50% at 20% 0%, hsl(22 82% 52% / 0.10), transparent 60%),
+      radial-gradient(50% 40% at 90% 100%, hsl(150 32% 42% / 0.10), transparent 60%);
+    background-attachment: fixed;
+    font-feature-settings: "ss01", "cv11";
   }
-  button:not(:disabled),
-  [role="button"]:not([aria-disabled="true"]),
-  [type="button"]:not(:disabled),
-  [type="submit"]:not(:disabled),
-  [type="reset"]:not(:disabled),
-  a[href],
-  select:not(:disabled),
-  input[type="checkbox"]:not(:disabled),
-  input[type="radio"]:not(:disabled) {
-    @apply cursor-pointer;
+
+  ::selection {
+    background: hsl(22 82% 52% / 0.35);
+    color: var(--color-paper);
   }
 }
 
-@layer components {
-  .container {
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 1rem; /* 16px - mobile padding */
-    padding-right: 1rem;
-  }
-
-  .flex {
-    min-height: 0;
-    min-width: 0;
-  }
-
-  @media (min-width: 640px) {
-    .container {
-      padding-left: 1.5rem; /* 24px - tablet padding */
-      padding-right: 1.5rem;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .container {
-      padding-left: 2rem; /* 32px - desktop padding */
-      padding-right: 2rem;
-      max-width: 1280px; /* Standard content width */
-    }
-  }
+@utility font-display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
 }
+@utility font-mono-soft {
+  font-family: var(--font-mono);
+}
+@utility copper-grid {
+  background-image: radial-gradient(hsl(22 82% 52% / 0.22) 0.6px, transparent 0.6px);
+  background-size: 22px 22px;
+}
+@utility grain {
+  background-image: radial-gradient(hsl(38 35% 88% / 0.05) 1px, transparent 1px);
+  background-size: 3px 3px;
+}
+@utility surface {
+  background-image: linear-gradient(180deg, hsl(160 16% 12%), hsl(160 18% 9%));
+  box-shadow:
+    0 1px 0 hsl(38 35% 88% / 0.04) inset,
+    0 10px 30px -12px hsl(160 30% 2% / 0.6);
+}
+@utility ring-copper {
+  box-shadow: 0 0 0 1px hsl(22 82% 52% / 0.3), 0 12px 32px -10px hsl(22 82% 52% / 0.35);
+}
+@utility text-balance {
+  text-wrap: balance;
+}
+
+/* Scrollbar discreta */
+.scroll-fancy::-webkit-scrollbar { width: 8px; height: 8px; }
+.scroll-fancy::-webkit-scrollbar-track { background: transparent; }
+.scroll-fancy::-webkit-scrollbar-thumb {
+  background: hsl(160 14% 18%);
+  border-radius: 999px;
+}
+.scroll-fancy::-webkit-scrollbar-thumb:hover { background: hsl(22 82% 52% / 0.5); }

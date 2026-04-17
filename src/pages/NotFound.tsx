@@ -1,49 +1,53 @@
-import { Button } from "../components/ui/button";
-import { Card, CardContent } from "../components/ui/card";
-import { AlertCircle, Home } from "lucide-react";
 import { useLocation } from "wouter";
+import { Button } from "../components/ui/button";
+import { Compass, Home } from "lucide-react";
 
 export default function NotFound() {
-  const [, setLocation] = useLocation();
-
-  const handleGoHome = () => {
-    setLocation("/");
-  };
+  const [, navigate] = useLocation();
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
-      <Card className="w-full max-w-lg mx-4 shadow-lg border-0 bg-white/80 backdrop-blur-sm">
-        <CardContent className="pt-8 pb-8 text-center">
-          <div className="flex justify-center mb-6">
-            <div className="relative">
-              <div className="absolute inset-0 bg-red-100 rounded-full animate-pulse" />
-              <AlertCircle className="relative h-16 w-16 text-red-500" />
-            </div>
-          </div>
+    <div className="min-h-screen relative grid place-items-center p-4 overflow-hidden">
+      <div className="absolute -top-32 -left-32 size-[28rem] rounded-full bg-[hsl(22_82%_52%/0.15)] blur-[120px] pointer-events-none" />
+      <div className="absolute -bottom-32 -right-32 size-[28rem] rounded-full bg-[hsl(150_32%_42%/0.15)] blur-[120px] pointer-events-none" />
+      <div className="absolute inset-0 grain opacity-30 pointer-events-none" />
+      <div className="absolute inset-0 copper-grid opacity-30 pointer-events-none" />
 
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">404</h1>
+      <div className="relative text-center max-w-lg animate-fade-in">
+        <div className="inline-flex items-center justify-center size-20 rounded-2xl bg-[hsl(22_82%_52%/0.10)] border border-[hsl(22_82%_52%/0.25)] mb-6">
+          <Compass className="size-9 text-primary" />
+        </div>
 
-          <h2 className="text-xl font-semibold text-slate-700 mb-4">
-            Page Not Found
-          </h2>
+        <p className="font-mono-soft text-[10px] uppercase tracking-[0.4em] text-primary mb-3">
+          erro 404
+        </p>
+        <h1 className="font-display text-6xl lg:text-7xl text-[hsl(38_32%_92%)] mb-4 text-balance leading-none">
+          Caminho <span className="italic text-primary">perdido</span>.
+        </h1>
+        <p className="text-muted-foreground text-lg max-w-md mx-auto mb-8">
+          A página que você procura não existe ou foi movida para outro endereço.
+        </p>
 
-          <p className="text-slate-600 mb-8 leading-relaxed">
-            Sorry, the page you are looking for doesn't exist.
-            <br />
-            It may have been moved or deleted.
-          </p>
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          <Button
+            onClick={() => navigate("/")}
+            className="h-11 px-6 bg-gradient-to-r from-[hsl(22_82%_52%)] to-[hsl(24_70%_60%)] text-[hsl(38_45%_96%)] ring-copper gap-2"
+          >
+            <Home className="size-4" />
+            Voltar ao início
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => window.history.back()}
+            className="h-11 px-6 border-border bg-card"
+          >
+            ← Página anterior
+          </Button>
+        </div>
 
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Button
-              onClick={handleGoHome}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
-            >
-              <Home className="w-4 h-4 mr-2" />
-              Go Home
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+        <p className="mt-12 text-[10px] font-mono-soft text-muted-foreground/60 uppercase tracking-widest">
+          devPlanner v1.0
+        </p>
+      </div>
     </div>
   );
 }
